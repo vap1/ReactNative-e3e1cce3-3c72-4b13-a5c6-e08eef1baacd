@@ -1,14 +1,14 @@
 
 import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Button, Alert } from 'react-native';
 import { User } from '../types/UserTypes';
-import DataInputApi from '../apis/DataInputApi';
+import { dataInputApi } from '../apis/DataInputApi';
 
-interface DataInputFormProps {
-  onFormSubmit: () => void;
-}
+type DataInputFormProps = {
+  onSubmit: () => void;
+};
 
-const DataInputForm: React.FC<DataInputFormProps> = ({ onFormSubmit }) => {
+const DataInputForm: React.FC<DataInputFormProps> = ({ onSubmit }) => {
   const [user, setUser] = useState<User>({
     userId: '',
     firstName: '',
@@ -18,19 +18,20 @@ const DataInputForm: React.FC<DataInputFormProps> = ({ onFormSubmit }) => {
     address: '',
   });
 
-  const handleInputChange = (field: keyof User, value: string) => {
+  const handleInputChange = (key: keyof User, value: string) => {
     setUser((prevUser) => ({
       ...prevUser,
-      [field]: value,
+      [key]: value,
     }));
   };
 
   const handleSubmit = async () => {
     try {
-      await DataInputApi.dataInput({ user });
-      onFormSubmit();
+      await dataInputApi({ user });
+      Alert.alert('Success', 'Data input successful');
+      onSubmit();
     } catch (error) {
-      console.error('Failed to perform data input:', error);
+      Alert.alert('Error', 'Failed to perform data input');
     }
   };
 
