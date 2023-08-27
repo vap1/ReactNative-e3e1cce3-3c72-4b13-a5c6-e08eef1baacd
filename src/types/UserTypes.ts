@@ -1,5 +1,5 @@
 
-export interface User {
+interface User {
   userId: string;
   firstName: string;
   lastName: string;
@@ -8,22 +8,32 @@ export interface User {
   address: string;
 }
 
-export interface DataInputRequest {
+interface DataInputRequest {
   user: User;
 }
 
-export interface DataInputResponse {}
+interface DataInputResponse {}
 
-export interface SearchRequest {
+interface SearchRequest {
   keyword: string;
 }
 
-export interface SearchResponse {
+interface SearchResponse {
   searchResults: User[];
 }
 
-export interface DataDisplayRequest {}
+interface DataDisplayRequest {}
 
-export interface DataDisplayResponse {
+interface DataDisplayResponse {
   users: User[];
 }
+
+export {
+  User,
+  DataInputRequest,
+  DataInputResponse,
+  SearchRequest,
+  SearchResponse,
+  DataDisplayRequest,
+  DataDisplayResponse,
+};
