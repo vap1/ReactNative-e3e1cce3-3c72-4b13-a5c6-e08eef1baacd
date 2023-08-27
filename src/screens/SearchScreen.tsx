@@ -1,44 +1,45 @@
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
-import { SearchRequest, SearchResponse } from '../types/SearchTypes';
-import { search } from '../apis/SearchApi';
+import { View, TextInput, Button, FlatList, Text } from 'react-native';
+import { User } from '../types/UserTypes';
+import SearchApi from '../apis/SearchApi';
 
-const SearchScreen: React.FC = () => {
+interface SearchScreenProps {}
+
+const SearchScreen: React.FC<SearchScreenProps> = () => {
   const [keyword, setKeyword] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchResponse[]>([]);
+  const [searchResults, setSearchResults] = useState<User[]>([]);
 
   const handleSearch = async () => {
     try {
-      const request: SearchRequest = {
-        keyword: keyword,
-      };
-      const response = await search(request);
+      const response = await SearchApi.search({ keyword });
       setSearchResults(response.searchResults);
     } catch (error) {
-      console.error('Error searching:', error);
+      console.error('Failed to perform search:', error);
     }
   };
 
   return (
     <View>
-      <Text>Search Screen</Text>
       <TextInput
-        placeholder="Enter keyword"
+        placeholder="Keyword"
         value={keyword}
         onChangeText={setKeyword}
       />
       <Button title="Search" onPress={handleSearch} />
-      {searchResults.map((result, index) => (
-        <View key={index}>
-          <Text>{result.userId}</Text>
-          <Text>{result.firstName}</Text>
-          <Text>{result.lastName}</Text>
-          <Text>{result.email}</Text>
-          <Text>{result.phone}</Text>
-          <Text>{result.address}</Text>
-        </View>
-      ))}
+      <FlatList
+        data={searchResults}
+        keyExtractor={(item) => item.userId}
+        renderItem={({ item }) => (
+          <View>
+            <Text>First Name: {item.firstName}</Text>
+            <Text>Last Name: {item.lastName}</Text>
+            <Text>Email: {item.email}</Text>
+            <Text>Phone: {item.phone}</Text>
+            <Text>Address: {item.address}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 };
