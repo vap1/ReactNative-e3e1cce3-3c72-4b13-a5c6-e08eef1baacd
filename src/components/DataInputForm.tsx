@@ -1,14 +1,14 @@
 
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
+import { View, TextInput, Button } from 'react-native';
 import { User } from '../types/UserTypes';
-import { DataInputRequest } from '../apis/DataInputApi';
+import DataInputApi from '../apis/DataInputApi';
 
 interface DataInputFormProps {
-  onSubmit: (data: DataInputRequest) => void;
+  onFormSubmit: () => void;
 }
 
-const DataInputForm: React.FC<DataInputFormProps> = ({ onSubmit }) => {
+const DataInputForm: React.FC<DataInputFormProps> = ({ onFormSubmit }) => {
   const [user, setUser] = useState<User>({
     userId: '',
     firstName: '',
@@ -18,33 +18,20 @@ const DataInputForm: React.FC<DataInputFormProps> = ({ onSubmit }) => {
     address: '',
   });
 
-  const handleInputChange = (key: keyof User, value: string) => {
+  const handleInputChange = (field: keyof User, value: string) => {
     setUser((prevUser) => ({
       ...prevUser,
-      [key]: value,
+      [field]: value,
     }));
   };
 
-  const handleSubmit = () => {
-    if (validateForm()) {
-      const data: DataInputRequest = {
-        user,
-      };
-      onSubmit(data);
-    } else {
-      Alert.alert('Error', 'Please fill in all the required fields.');
+  const handleSubmit = async () => {
+    try {
+      await DataInputApi.dataInput({ user });
+      onFormSubmit();
+    } catch (error) {
+      console.error('Failed to perform data input:', error);
     }
-  };
-
-  const validateForm = () => {
-    return (
-      user.userId.trim() !== '' &&
-      user.firstName.trim() !== '' &&
-      user.lastName.trim() !== '' &&
-      user.email.trim() !== '' &&
-      user.phone.trim() !== '' &&
-      user.address.trim() !== ''
-    );
   };
 
   return (
