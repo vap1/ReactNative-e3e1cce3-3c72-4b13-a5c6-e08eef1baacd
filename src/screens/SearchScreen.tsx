@@ -1,45 +1,32 @@
 
 import React, { useState } from 'react';
-import { View, TextInput, Button, FlatList, Text } from 'react-native';
+import { View, TextInput, Button, Alert } from 'react-native';
 import { User } from '../types/UserTypes';
-import SearchApi from '../apis/SearchApi';
+import { searchApi } from '../apis/SearchApi';
+import SearchResults from '../components/SearchResults';
 
-interface SearchScreenProps {}
-
-const SearchScreen: React.FC<SearchScreenProps> = () => {
+const SearchScreen: React.FC = () => {
   const [keyword, setKeyword] = useState('');
   const [searchResults, setSearchResults] = useState<User[]>([]);
 
   const handleSearch = async () => {
     try {
-      const response = await SearchApi.search({ keyword });
+      const response = await searchApi({ keyword });
       setSearchResults(response.searchResults);
     } catch (error) {
-      console.error('Failed to perform search:', error);
+      Alert.alert('Error', 'Failed to perform search');
     }
   };
 
   return (
     <View>
       <TextInput
-        placeholder="Keyword"
+        placeholder="Enter keyword"
         value={keyword}
         onChangeText={setKeyword}
       />
       <Button title="Search" onPress={handleSearch} />
-      <FlatList
-        data={searchResults}
-        keyExtractor={(item) => item.userId}
-        renderItem={({ item }) => (
-          <View>
-            <Text>First Name: {item.firstName}</Text>
-            <Text>Last Name: {item.lastName}</Text>
-            <Text>Email: {item.email}</Text>
-            <Text>Phone: {item.phone}</Text>
-            <Text>Address: {item.address}</Text>
-          </View>
-        )}
-      />
+      <SearchResults searchResults={searchResults} />
     </View>
   );
 };
