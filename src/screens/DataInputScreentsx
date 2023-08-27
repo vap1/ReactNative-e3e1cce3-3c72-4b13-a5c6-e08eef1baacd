@@ -1,67 +1,26 @@
 
-import React, { useState } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
-import { DataInputRequest } from '../types/UserTypes';
-import { DataInputApi } from '../apis/DataInputApi';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import DataInputForm from '../components/DataInputForm';
 
 const DataInputScreen: React.FC = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-
-  const handleDataInput = async () => {
-    try {
-      const requestData: DataInputRequest = {
-        user: {
-          firstName,
-          lastName,
-          email,
-          phone,
-          address,
-        },
-      };
-
-      const response = await DataInputApi.dataInput(requestData);
-      // Handle success response
-      Alert.alert('Success', 'Data input successful');
-    } catch (error) {
-      // Handle error
-      Alert.alert('Error', 'Failed to input data');
-    }
+  const handleFormSubmit = () => {
+    // Handle form submission logic here
   };
 
   return (
-    <View>
-      <TextInput
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      <TextInput
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        placeholder="Phone"
-        value={phone}
-        onChangeText={setPhone}
-      />
-      <TextInput
-        placeholder="Address"
-        value={address}
-        onChangeText={setAddress}
-      />
-      <Button title="Submit" onPress={handleDataInput} />
+    <View style={styles.container}>
+      <DataInputForm onFormSubmit={handleFormSubmit} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default DataInputScreen;
