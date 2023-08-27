@@ -4,13 +4,13 @@ import { View, StyleSheet } from 'react-native';
 import DataInputForm from '../components/DataInputForm';
 
 const DataInputScreen: React.FC = () => {
-  const handleFormSubmit = () => {
-    // Handle form submission logic here
+  const handleDataInputSubmit = () => {
+    // Handle data input submission logic here
   };
 
   return (
     <View style={styles.container}>
-      <DataInputForm onFormSubmit={handleFormSubmit} />
+      <DataInputForm onSubmit={handleDataInputSubmit} />
     </View>
   );
 };
